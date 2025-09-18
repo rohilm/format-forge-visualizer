@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { Template, FormField, FormData, FormSubmission } from '@/types';
 import { convertFieldPositionsToPercentages, convertFieldPositionsToPixels, PercentagePosition } from '@/utils/positionUtils';
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 
 // Admin credentials from environment variables

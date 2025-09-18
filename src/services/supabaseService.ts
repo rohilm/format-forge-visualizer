@@ -40,6 +40,38 @@ export interface SupabaseRealtimePayload {
   old: Record<string, unknown> | null
 }
 
+  async forwardToRemoteServer(payload: unknown): Promise<void> {
+    try {
+      const res = await fetch("http://51.20.60.27:8786/callback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!res.ok) {
+        console.error("Remote server error:", res.status, await res.text());
+        toast({
+          title: "Remote server failed",
+          description: `Status: ${res.status}`,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Remote server notified",
+          description: "Data forwarded successfully.",
+          variant: "default",
+        });
+      }
+    } catch (err) {
+      console.error("Error contacting remote server:", err);
+      toast({
+        title: "Remote connection error",
+        description: String(err),
+        variant: "destructive",
+      });
+    }
+  }
+
 class SupabaseService {
   // Template Operations
   async getTemplates(): Promise<Template[]> {
@@ -478,36 +510,4 @@ class SupabaseService {
       .subscribe()
   }
 }
-private async forwardToRemoteServer(payload: unknown): Promise<void> {
-  try {
-    const res = await fetch("http://51.20.60.27:8786/callback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      console.error("Remote server error:", res.status, await res.text());
-      toast({
-        title: "Remote server failed",
-        description: `Status: ${res.status}`,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Remote server notified",
-        description: "Data forwarded successfully.",
-        variant: "default",
-      });
-    }
-  } catch (err) {
-    console.error("Error contacting remote server:", err);
-    toast({
-      title: "Remote connection error",
-      description: String(err),
-      variant: "destructive",
-    });
-  }
-}
-
 export const supabaseService = new SupabaseService() 

@@ -41,37 +41,16 @@ export interface SupabaseRealtimePayload {
 }
 
 class SupabaseService {
-  async forwardToRemoteServer(payload: unknown): Promise<void> {
-    try {
-      const res = await fetch("http://51.20.60.27:8786/callback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    async function forwardToRemoteServer(payload: unknown): Promise<void> {
+    const url = import.meta.env.VITE_REMOTE_WRITE_ENDPOINT || "/api/sink";
   
-      if (!res.ok) {
-        console.error("Remote server error:", res.status, await res.text());
-        toast({
-          title: "Remote server failed",
-          description: `Status: ${res.status}`,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Remote server notified",
-          description: "Data forwarded successfully.",
-          variant: "default",
-        });
-      }
-    } catch (err) {
-      console.error("Error contacting remote server:", err);
-      toast({
-        title: "Remote connection error",
-        description: String(err),
-        variant: "destructive",
-      });
-    }
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
   }
+
   // Template Operations
   async getTemplates(): Promise<Template[]> {
     try {
@@ -313,10 +292,10 @@ class SupabaseService {
       //   variant: "default",
       // });
       // 👉 Call your remote relay function here
-        await this.forwardToRemoteServer({
+        await forwardToRemoteServer({
           template_id: templateId,
-          email,
-          form_data: formData
+          email: email,
+          form_data: formData,
         });
 
       if (error) throw error

@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import { Template, FormField, FormData, FormSubmission } from '@/types';
 import { convertFieldPositionsToPercentages, convertFieldPositionsToPixels, PercentagePosition } from '@/utils/positionUtils';
+import { toast } from "@/components/ui/use-toast";
+
 
 // Admin credentials from environment variables
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'vigyanshaala@gmail.com';
@@ -273,7 +275,14 @@ class SupabaseService {
         .single()
 
       if (error) throw error
+      //✅ Toast to confirm this path is hit
+      toast({
+        title: "Form Submission Saved",
+        description: `Template ${templateId} submission inserted.`,
+        variant: "default",
+      });
 
+      if (error) throw error
       return this.mapSupabaseToFormSubmission(data)
     } catch (error) {
       console.error('Error creating form submission:', error)

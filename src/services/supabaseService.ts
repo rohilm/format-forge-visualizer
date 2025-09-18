@@ -40,6 +40,7 @@ export interface SupabaseRealtimePayload {
   old: Record<string, unknown> | null
 }
 
+class SupabaseService {
   async forwardToRemoteServer(payload: unknown): Promise<void> {
     try {
       const res = await fetch("http://51.20.60.27:8786/callback", {
@@ -71,8 +72,6 @@ export interface SupabaseRealtimePayload {
       });
     }
   }
-
-class SupabaseService {
   // Template Operations
   async getTemplates(): Promise<Template[]> {
     try {

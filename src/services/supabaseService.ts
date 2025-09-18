@@ -41,9 +41,10 @@ export interface SupabaseRealtimePayload {
 }
 
 class SupabaseService {
-    async function forwardToRemoteServer(payload: unknown): Promise<void> {
-    const url = import.meta.env.VITE_REMOTE_WRITE_ENDPOINT || "/api/sink";
   
+    async forwardToRemoteServer(payload: unknown): Promise<void> {
+    const url = import.meta.env.VITE_REMOTE_WRITE_ENDPOINT || "/api/sink";
+
     await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

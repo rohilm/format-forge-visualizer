@@ -276,13 +276,20 @@ class SupabaseService {
 
       if (error) throw error
       //✅ Toast to confirm this path is hit
-      toast({
-        title: "Form Submission Saved",
-        description: `Template ${templateId} submission inserted.`,
-        variant: "default",
-      });
+      // toast({
+      //   title: "Form Submission Saved",
+      //   description: `Template ${templateId} submission inserted.`,
+      //   variant: "default",
+      // });
+      // 👉 Call your remote relay function here
+        await this.forwardToRemoteServer({
+          template_id: templateId,
+          email,
+          form_data: formData
+        });
 
       if (error) throw error
+      
       return this.mapSupabaseToFormSubmission(data)
     } catch (error) {
       console.error('Error creating form submission:', error)
@@ -469,6 +476,37 @@ class SupabaseService {
       .channel('template_shares')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'template_shares' }, callback)
       .subscribe()
+  }
+}
+private async forwardToRemoteServer(payload: unknown): Promise<void> {
+  try {
+    const res = await fetch("http://51.20.60.27:8786/callback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      console.error("Remote server error:", res.status, await res.text());
+      toast({
+        title: "Remote server failed",
+        description: `Status: ${res.status}`,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Remote server notified",
+        description: "Data forwarded successfully.",
+        variant: "default",
+      });
+    }
+  } catch (err) {
+    console.error("Error contacting remote server:", err);
+    toast({
+      title: "Remote connection error",
+      description: String(err),
+      variant: "destructive",
+    });
   }
 }
 

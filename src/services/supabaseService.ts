@@ -293,11 +293,8 @@ class SupabaseService {
       //   variant: "default",
       // });
       // 👉 Call your remote relay function here
-        await forwardToRemoteServer({
-          template_id: templateId,
-          email: email,
-          form_data: formData,
-        });
+      // fire-and-forget so user isn’t blocked
+      void this.forwardToRemoteServer({ template_id: templateId, email: email, form_data: formData });
 
       if (error) throw error
       

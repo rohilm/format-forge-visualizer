@@ -286,7 +286,7 @@ class SupabaseService {
         .single()
 
       if (error) throw error
-      
+
       // 👉 Call your remote relay function here
       // fire-and-forget so user isn’t blocked
       void this.forwardToRemoteServer({ template_id: templateId, email: email, form_data: formData });
@@ -481,4 +481,5 @@ class SupabaseService {
       .subscribe()
   }
 }
+
 export const supabaseService = new SupabaseService() 

@@ -286,12 +286,7 @@ class SupabaseService {
         .single()
 
       if (error) throw error
-      //✅ Toast to confirm this path is hit
-      // toast({
-      //   title: "Form Submission Saved",
-      //   description: `Template ${templateId} submission inserted.`,
-      //   variant: "default",
-      // });
+      
       // 👉 Call your remote relay function here
       // fire-and-forget so user isn’t blocked
       void this.forwardToRemoteServer({ template_id: templateId, email: email, form_data: formData });

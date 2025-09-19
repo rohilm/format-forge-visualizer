@@ -482,4 +482,4 @@ class SupabaseService {
   }
 }
 
-export const supabaseService = new SupabaseService() 
+export const supabaseService = new SupabaseService()
